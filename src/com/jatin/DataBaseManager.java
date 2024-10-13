@@ -1,24 +1,20 @@
 package com.jatin;
 
+import com.jatin.execeptions.DataBaseDoesNotExistException;
 import com.jatin.execeptions.NameAlreadyExistsException;
 import com.jatin.model.DataBase;
 
 import javax.xml.crypto.Data;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.UUID;
 
 public class DataBaseManager {
 
-//    Design In-memory SQL-like Database where:-
-//    It should be possible to create or delete tables in a database.
-//    The supported column types are string and int.
-//    It should be possible to insert records in a table.
-//    It should be possible to print all records in a table.
-//    It should be possible to filter and display records whose column values match a given value.
-
     HashMap<String, DataBase> databaseNameVsDateBase;
-    private volatile DataBaseManager dataBaseManagerInstance;
+    private static volatile DataBaseManager dataBaseManagerInstance;
+    private static Object mutex = new Object();
 
 
     private DataBaseManager(){
@@ -26,17 +22,17 @@ public class DataBaseManager {
     }
 
 
-    public DataBaseManager getInstance(){
+    public static DataBaseManager getInstance(){
         DataBaseManager temporaryInstance = dataBaseManagerInstance;
         if(Objects.isNull(temporaryInstance)){
-            synchronized (this){
+            synchronized (mutex){
                 temporaryInstance = dataBaseManagerInstance;
                 if(Objects.isNull(temporaryInstance)) {
-                    dataBaseManagerInstance = new DataBaseManager();
+                    temporaryInstance = dataBaseManagerInstance = new DataBaseManager();
                 }
             }
         }
-        return dataBaseManagerInstance;
+        return temporaryInstance;
     }
 
     public DataBase createDataBase(String dataBaseName) throws NameAlreadyExistsException {
@@ -48,6 +44,19 @@ public class DataBaseManager {
         DataBase dataBase = new DataBase(dataBaseId,dataBaseName);
         databaseNameVsDateBase.put(dataBaseName,dataBase);
         return dataBase;
+    }
+
+    public void printAllDataBase(){
+        for(String dbName : databaseNameVsDateBase.keySet()){
+            System.out.println("db name ->"+dbName);
+        }
+    }
+
+    public void removeDataBase(String dbName){
+        if(!databaseNameVsDateBase.containsKey(dbName)){
+            throw new DataBaseDoesNotExistException("database does not exist with name"+dbName);
+        }
+        databaseNameVsDateBase.remove(dbName);
     }
 
 }
