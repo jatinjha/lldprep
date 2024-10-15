@@ -32,4 +32,8 @@ public class TableRow {
     public int getRowId() {
         return rowId;
     }
+
+    public HashMap<String, Object> getColumnVsValue() {
+        return columnVsValue;
+    }
 }

@@ -39,8 +39,12 @@ public class Main {
 
      Table table = dataBase1.createTable("EmpData",tableHeaderList);
      try{
-       table.insertRowInTable(List.of("jj1",10000002));
-       table.insertRowInTable(List.of("jj2",10093882));
+       int rowIdOne = table.insertRowInTable(List.of("jj1",10000002));
+       int rowIdTwo = table.insertRowInTable(List.of("jj2",10093882));
+       table.printTable();
+       table.deleteRowInTable(rowIdTwo);
+       table.printTable();
+       //table.updateTable();
      }catch (Exception ex){
       System.out.println("exception ->"+ex.getMessage());
      }

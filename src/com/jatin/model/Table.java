@@ -37,6 +37,27 @@ public class Table {
         return row.getRowId();
     }
 
+    public void printTable(){
+        for(int i=0 ; i<tableHeaderList.size() ; i++){
+            System.out.print(tableHeaderList.get(i).getColumnName()+" ");
+        }
+        System.out.println("");
+        for(int i=0 ; i<tableRowList.size() ; i++){
+            HashMap<String,Object> tableRow = tableRowList.get(i).getColumnVsValue();
+            for(Object keyVal : tableRow.values()){
+                System.out.print(keyVal.toString()+" ");
+            }
+            System.out.println("");
+        }
+    }
+
+    public void deleteRowInTable(int rowId) throws InvalidRowValueException{
+        if(rowId < 0 || rowId >= rowPoint){
+            throw new InvalidRowValueException("invaliid row");
+        }
+        tableRowList.remove(rowId);
+    }
+
     private boolean validateRowValues(List<Object> rowValues){
           return true;
 //        implement this method
